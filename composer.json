@@ -1,0 +1,17 @@
+{
+    "name": "yoeb/otelz",
+    "description": "YOEB.NET",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Yoeb\\Otelz\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "YOEB",
+            "email": "support@yoeb.net"
+        }
+    ],
+    "require": {}
+}
