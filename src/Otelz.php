@@ -28,6 +28,7 @@ class Otelz {
     static function post($url, $bodys = [], $headers = []) {
 
         $res = Http::withBasicAuth(env("OTELZ_USERNAME", 'GlobalTest1'), env("OTELZ_PASSWORD", 'GlobalTest1'))
+        ->timeout(env("OTELZ_TIMEOUT", 120))
         ->withHeaders($headers)->post(Otelz::url($url), Otelz::body($bodys));
         return $res;
     }

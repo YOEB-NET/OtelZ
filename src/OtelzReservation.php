@@ -17,7 +17,7 @@ class OtelzReservation {
     static protected $room_reference;
     static protected $guests = [];
     static protected $note;
-    static protected $bed_key;
+    static protected $bed_key = "";
     static protected $agree_save_info = true;
     static protected $agree_read_consent = true;
     static protected $agree_read_rules = true;
@@ -47,6 +47,7 @@ class OtelzReservation {
         "children"   => 0,
     ];
     static protected $request_type;
+    static protected $web_hook_url;
 
 
     public static function startDate($start_date) {
@@ -85,17 +86,24 @@ class OtelzReservation {
     }
 
     public static function availability(){
+
         $res = Otelz::post("/v1/detail/availability", [
-            "api_version"           => "1.0.0",
-            "facility_reference"    => self::$facility_reference,
-            "start_date"            => self::$start_date,
-            "end_date"              => self::$end_date,
-            "party"                 => self::$party,
-            "request_type"          => self::$request_type,
-            "lang"                  => self::$lang,
-            "currency"              => self::$currency,
-            "user_country"          => self::$user_country,
-            "device_type"           => self::$device_type
+            "api_version" => "1.0.0",
+            "partner_id" => -200,
+            "facility_reference" => 12004,
+            "start_date" => "2024-02-01",
+            "end_date" => "2024-02-03",
+            "party" => [
+                [
+                    "adults" => 2,
+                    "children" => []
+                ]
+            ],
+            "lang" => "tr",
+            "currency" => "try",
+            "user_country" => "tr",
+            "device_type" => 1,
+            "request_type" => "2"
         ]);
 
 
@@ -160,21 +168,16 @@ class OtelzReservation {
 
     public static function start(){
         $res = Otelz::post("/reservation/start", [
-            "facility_reference"=> self::$facility_reference,
-            "price_keys"        => self::$price_keys,
-            "currency"          => self::$currency,
-            "lang"              => self::$lang,
-            "price_formatter"   => self::$price_formatter,
-            "user_country"      => self::$user_country,
-            "device_type"       => self::$device_type,
-            "customer_geo"      => [
-                "country_code"      => self::$country_code,
-                "ip"                => self::$ip,
-                "latitude"          => self::$latitude,
-                "longitude"         => self::$longitude
-            ]
+            "facility_reference" => 12004,
+            "price_keys" => self::$price_keys,
+            "currency" => "TRY",
+            "lang" => "tr",
+            "price_formatter" => [
+                "decimal_digit_number" => 2
+            ],
+            "user_country" => "TR",
+            "device_type" => 1,
         ]);
-
 
         if(!empty($res["errors"])){
             Otelz::error($res["errors"][0]["message"], $res["errors"][0]["code"]);
@@ -197,7 +200,7 @@ class OtelzReservation {
         return (new static);
     }
 
-    public static function customer($name, $surname, $phone_code, $phone_number, $email, $country, $gender){
+    public static function customer($name, $surname, $phone_code, $phone_number, $email, $country){
         self::$customer = [
             "name"          => $name,
             "surname"       => $surname,
@@ -205,7 +208,6 @@ class OtelzReservation {
             "phone_number"  => $phone_number,
             "email"         => $email,
             "country"       => $country,
-            "gender"        => $gender,
         ];
         return (new static);
     }
@@ -221,16 +223,18 @@ class OtelzReservation {
     }
 
     public static function guests($guests){
-        self::$room_info["guests"] = $guests;
+        self::$guests = $guests;
+        self::$room_info["guests"] = self::$guests;
         return (new static);
     }
 
     public static function guestAdd($name, $surname, $age){
-        self::$room_info["guests"][] = (object) [
-            "neme"      => $name,
+        self::$guests[] = [
+            "name"      => $name,
             "surname"   => $surname,
             "age"       => $age
         ];
+        self::$room_info["guests"] = self::$guests;
         return (new static);
     }
 
@@ -299,6 +303,23 @@ class OtelzReservation {
         return (new static);
     }
 
+    public static function paymentRedirectUri($payment_redirect_uri){
+        self::$payment_option["payment_redirect_uri"] = $payment_redirect_uri;
+        return (new static);
+    }
+
+    public static function cardInfo($holderName, $cardNumber, $year, $month, $cvv){
+        self::$payment_option["payment_type"] = "online";
+        self::$payment_option["card_info"] = [
+            "holder_name" => $holderName,
+            "card_number" => $cardNumber,
+            "year" => $year,
+            "month" => $month,
+            "cvv" => $cvv,
+        ];
+        return (new static);
+    }
+
     public static function currency($currency){
         self::$currency = $currency;
         return (new static);
@@ -309,10 +330,14 @@ class OtelzReservation {
         return (new static);
     }
 
+    public static function webHookUrl($webHookUrl){
+        self::$web_hook_url = $webHookUrl;
+        return (new static);
+    }
+
     public static function saveCustomer(){
         $res = Otelz::post("/reservation/save/customer", [
             "lang"                   => self::$lang,
-            "api_version"            => "1.0.0",
             "reservation_guid"       => self::$reservation_guid,
             "customer"               => self::$customer,
             "agree_save_info"        => self::$agree_save_info,
@@ -326,7 +351,6 @@ class OtelzReservation {
             "device_type"            => self::$device_type,
         ]);
 
-
         if(!empty($res["errors"])){
             Otelz::error($res["errors"][0]["message"], $res["errors"][0]["code"]);
         }
@@ -339,9 +363,8 @@ class OtelzReservation {
     }
 
     public static function saveRoom(){
-        $res = Otelz::post("/v1/reservation/save/customer", [
+        $res = Otelz::post("/reservation/save/room", [
             "lang"                   => self::$lang,
-            "api_version"            => "1.0.0",
             "reservation_guid"       => self::$reservation_guid,
             "room_info"              => self::$room_info,
             "is_honey_moon"          => self::$is_honey_moon,
@@ -367,51 +390,66 @@ class OtelzReservation {
     }
 
     public static function saveCustomerAndRoom(){
-        $res = Otelz::post("/reservation/save/customerandroom", [
-            "api_version" => "1.0.0",
+
+        $res = Otelz::post("/reservation/save/customerandroom",  [
             "reservation_guid" => self::$reservation_guid,
-            "customer" => [
-                "name" => "test",
-                "surname" => "user",
-                "phone_code" => "90",
-                "phone_number" => "5453040404",
-                "email" => "test@test.com",
-                "gender" => 2,
-                "country" => "TR"
-            ],
-            "agree_save_info" => "true",
-            "agree_read_consent" => "true",
+            "customer" => self::$customer,
+            "agree_save_info" => self::$agree_save_info,
+            "agree_read_consent" => self::$agree_read_consent,
             "agree_read_rules" => self::$agree_read_rules,
             "res_for_who" => self::$res_for_who,
             "estimated_checkin_time" => self::$estimated_checkin_time,
-            "room_info" => [
-                [
-                    "room_reference" => self::$room_reference,
-                    "guests" => [
-                        [
-                            "name" => "test",
-                            "surname" => "user",
-                            "age" => 35
-                        ]
-                    ],
-                    "note" => "test Note",
-                    "bed_key" => ""
-                ]
-            ],
+            "room_info" => self::$room_info,
             "is_honey_moon" => false,
-            "honey_moon_note" => "",
-            "wedding_date" => "",
-            "customer_note" => "",
-            "currency" => self::$currency,
-            "lang" => "tr",
-            "price_formatter" => [
-                "decimal_digit_number" => 2
-            ],
-            "user_country" => "TR",
+            "honey_moon_note" => self::$honey_moon_note,
+            "wedding_date" => self::$wedding_date,
+            "customer_note" =>  self::$customer_note,
+            "currency" =>  self::$currency,
+            "lang" => self::$lang,
+            "price_formatter" => self::$price_formatter,
+            "user_country" => self::$user_country,
             "device_type" => self::$device_type,
-            "web_hook_url" => ""
+            "web_hook_url" => self::$web_hook_url
         ]);
 
+        if(!empty($res["errors"])){
+            Otelz::error($res["errors"][0]["message"], $res["errors"][0]["code"]);
+        }
+
+        if($res->status() != 200){
+            Otelz::error("Oh no!, status code: " . $res->status(), $res->status());
+        }
+
+        return $res->json();
+    }
+
+    public static function status(){
+        $res = Otelz::post("/v1/reservation/status", [
+            "reservation_guid"  => self::$reservation_guid,
+            "lang"              => self::$lang,
+        ]);
+
+        if(!empty($res["errors"])){
+            Otelz::error($res["errors"][0]["message"], $res["errors"][0]["code"]);
+        }
+
+        if($res->status() != 200){
+            Otelz::error("Oh no!, status code: " . $res->status(), $res->status());
+        }
+
+        return $res->json();
+    }
+
+    public static function finalize(){
+        $res = Otelz::post("/reservation/finalize/finalize", [
+            "reservation_guid"  => self::$reservation_guid,
+            "payment_option"    => self::$payment_option,
+            "currency"          => self::$currency,
+            "lang"              => self::$lang,
+            "price_formatter"   => self::$price_formatter,
+            "device_type"       => self::$device_type,
+            "web_hook_url"      => self::$web_hook_url
+        ]);
 
         if(!empty($res["errors"])){
             Otelz::error($res["errors"][0]["message"], $res["errors"][0]["code"]);
@@ -426,76 +464,25 @@ class OtelzReservation {
 
     public static function saveAndFinalize(){
         $res = Otelz::post("/v1/reservation/finalize/saveandfinalize", [
-            "lang"                      => self::$lang,
-            "reservation_guid"          => self::$reservation_guid,
-            "customer"                  => self::$customer,
-            "room_info"                 => self::$room_info,
-            "agree_save_info"           => self::$agree_save_info,
-            "agree_read_consent"        => self::$agree_read_consent,
-            "agree_read_rules"          => self::$agree_read_rules,
-            "res_for_who"               => self::$res_for_who,
-            "estimated_checkin_time"    => self::$estimated_checkin_time,
-            "is_honey_moon"             => self::$is_honey_moon,
-            "honey_moon_note"           => self::$honey_moon_note,
-            "wedding_date"              => self::$wedding_date,
-            "customer_note"             => self::$customer_note,
-            "payment_option"            => self::$payment_option,
-            "currency"                  => self::$currency,
-            "price_formatter"           => self::$price_formatter,
-            "device_type"               => self::$device_type,
-        ]);
-        $res = Otelz::post("/v1/reservation/finalize/saveandfinalize", [
                 "reservation_guid" => self::$reservation_guid,
-                "customer" => [
-                    "name" => "Test",
-                    "surname" => "User",
-                    "phone_code" => "90",
-                    "phone_number" => "1231231212",
-                    "email" => "example@otelz.com",
-                    "country" => "TR"
-                ],
-                "room_info" => [
-                    [
-                        "room_reference" => "12004",
-                        "guests" => [
-                            [
-                                "name" => "Test",
-                                "surname" => "User",
-                                "age" => 35
-                            ]
-                        ],
-                        "note" => "test Note 2",
-                        "bed_key" => ""
-                    ]
-                ],
-                "payment_option" => [
-                    "payment_type" => "online",
-                    "payment_redirect_uri" => "https://fullconnect-api.dev.otelz.com" . "/v1/partner-return-test",
-                    "card_info" => [
-                        "card_number" => "4256690000000001",
-                        "holder_name" => "Mesut Taşcı",
-                        "year" => "2025",
-                        "month" => "01",
-                        "cvv" => "001"
-                    ]
-                ],
-                "agree_save_info" => true,
-                "agree_read_consent" => true,
-                "agree_read_rules" => true,
-                "res_for_who" => "ForMyself",
-                "estimated_checkin_time" => "14:00",
-                "is_honey_moon" => false,
-                "honey_moon_note" => "",
-                "wedding_date" => "",
-                "customer_note" => "",
-                "currency" => "tr",
-                "lang" => "tr",
-                "price_formatter" => [
-                    "decimal_digit_number" => 2
-                ],
-                "user_country" => "TR",
-                "device_type" => 2,
-                "web_hook_url" => ""
+                "customer" => self::$customer,
+                "room_info" => self::$room_info,
+                "payment_option" => self::$payment_option,
+                "agree_save_info" => self::$agree_save_info,
+                "agree_read_consent" => self::$agree_read_consent,
+                "agree_read_rules" => self::$agree_read_rules,
+                "res_for_who" => self::$res_for_who,
+                "estimated_checkin_time" => self::$estimated_checkin_time,
+                "honey_moon_note" => self::$honey_moon_note,
+                "wedding_date" => self::$wedding_date,
+                "honey_moon_note" => self::$honey_moon_note,
+                "customer_note" => self::$customer_note,
+                "currency" => self::$currency,
+                "lang" => self::$lang,
+                "price_formatter" => self::$price_formatter,
+                "user_country" => self::$user_country,
+                "device_type" => self::$device_type,
+                "web_hook_url" => self::$web_hook_url
         ]);
 
         if(!empty($res["errors"])){
@@ -508,4 +495,5 @@ class OtelzReservation {
 
         return $res->json();
     }
+
 }
