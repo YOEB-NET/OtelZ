@@ -8,15 +8,16 @@ class OtelzInstallment {
 
     static function list(array $facilityReferences = []) {
         $res = Otelz::post("data/installment_data", ["facility_references" => $facilityReferences]);
-        if(!empty($res["errors"])){
-            Otelz::error($res["errors"][0]["message"], $res["errors"][0]["code"]);
+        $resJson = $res->json();
+        if(!empty($resJson["errors"])){
+            return Otelz::error( $resJson["errors"][0]["message"], $resJson["errors"][0]["code"]);
         }
 
         if($res->status() != 200){
-            Otelz::error("Oh no!, status code: " . $res->status(), $res->status());
+            Otelz::errorThrow("Oh no!, status code: " . $res->status(), $res->status());
         }
 
-       return $res->json()["installments"]["12004"];
+       return $resJson["installments"]["12004"];
     }
 
 }

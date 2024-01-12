@@ -106,16 +106,16 @@ class OtelzReservation {
             "request_type" => "2"
         ]);
 
-
-        if(!empty($res["errors"])){
-            Otelz::error($res["errors"][0]["message"], $res["errors"][0]["code"]);
+        $resJson = $res->json();
+        if(!empty($resJson["errors"])){
+            return Otelz::error( $resJson["errors"][0]["message"], $resJson["errors"][0]["code"]);
         }
 
         if($res->status() != 200){
-            Otelz::error("Oh no!, status code: " . $res->status(), $res->status());
+            Otelz::errorThrow("Oh no!, status code: " . $res->status(), $res->status());
         }
 
-        return $res->json();
+       return $resJson;
     }
 
     public static function facilityReferencesAdd($facilityReference){
@@ -179,15 +179,16 @@ class OtelzReservation {
             "device_type" => 1,
         ]);
 
-        if(!empty($res["errors"])){
-            Otelz::error($res["errors"][0]["message"], $res["errors"][0]["code"]);
+        $resJson = $res->json();
+        if(!empty($resJson["errors"])){
+            return Otelz::error( $resJson["errors"][0]["message"], $resJson["errors"][0]["code"]);
         }
 
         if($res->status() != 200){
-            Otelz::error("Oh no!, status code: " . $res->status(), $res->status());
+            Otelz::errorThrow("Oh no!, status code: " . $res->status(), $res->status());
         }
 
-        return $res->json();
+       return $resJson;
     }
 
     public static function lang($lang){
@@ -351,15 +352,16 @@ class OtelzReservation {
             "device_type"            => self::$device_type,
         ]);
 
-        if(!empty($res["errors"])){
-            Otelz::error($res["errors"][0]["message"], $res["errors"][0]["code"]);
+        $resJson = $res->json();
+        if(!empty($resJson["errors"])){
+            return Otelz::error( $resJson["errors"][0]["message"], $resJson["errors"][0]["code"]);
         }
 
         if($res->status() != 200){
-            Otelz::error("Oh no!, status code: " . $res->status(), $res->status());
+            Otelz::errorThrow("Oh no!, status code: " . $res->status(), $res->status());
         }
 
-        return $res->json();
+       return $resJson;
     }
 
     public static function saveRoom(){
@@ -378,15 +380,16 @@ class OtelzReservation {
         ]);
 
 
-        if(!empty($res["errors"])){
-            Otelz::error($res["errors"][0]["message"], $res["errors"][0]["code"]);
+        $resJson = $res->json();
+        if(!empty($resJson["errors"])){
+            return Otelz::error( $resJson["errors"][0]["message"], $resJson["errors"][0]["code"]);
         }
 
         if($res->status() != 200){
-            Otelz::error("Oh no!, status code: " . $res->status(), $res->status());
+            Otelz::errorThrow("Oh no!, status code: " . $res->status(), $res->status());
         }
 
-        return $res->json();
+       return $resJson;
     }
 
     public static function saveCustomerAndRoom(){
@@ -412,15 +415,16 @@ class OtelzReservation {
             "web_hook_url" => self::$web_hook_url
         ]);
 
-        if(!empty($res["errors"])){
-            Otelz::error($res["errors"][0]["message"], $res["errors"][0]["code"]);
+        $resJson = $res->json();
+        if(!empty($resJson["errors"])){
+            return Otelz::error( $resJson["errors"][0]["message"], $resJson["errors"][0]["code"]);
         }
 
         if($res->status() != 200){
-            Otelz::error("Oh no!, status code: " . $res->status(), $res->status());
+            Otelz::errorThrow("Oh no!, status code: " . $res->status(), $res->status());
         }
 
-        return $res->json();
+       return $resJson;
     }
 
     public static function status(){
@@ -429,15 +433,16 @@ class OtelzReservation {
             "lang"              => self::$lang,
         ]);
 
-        if(!empty($res["errors"])){
-            Otelz::error($res["errors"][0]["message"], $res["errors"][0]["code"]);
+        $resJson = $res->json();
+        if(!empty($resJson["errors"])){
+            return Otelz::error( $resJson["errors"][0]["message"], $resJson["errors"][0]["code"]);
         }
 
         if($res->status() != 200){
-            Otelz::error("Oh no!, status code: " . $res->status(), $res->status());
+            Otelz::errorThrow("Oh no!, status code: " . $res->status(), $res->status());
         }
 
-        return $res->json();
+       return $resJson;
     }
 
     public static function finalize(){
@@ -451,15 +456,16 @@ class OtelzReservation {
             "web_hook_url"      => self::$web_hook_url
         ]);
 
-        if(!empty($res["errors"])){
-            Otelz::error($res["errors"][0]["message"], $res["errors"][0]["code"]);
+        $resJson = $res->json();
+        if(!empty($resJson["errors"])){
+            return Otelz::error( $resJson["errors"][0]["message"], $resJson["errors"][0]["code"]);
         }
 
         if($res->status() != 200){
-            Otelz::error("Oh no!, status code: " . $res->status(), $res->status());
+            Otelz::errorThrow("Oh no!, status code: " . $res->status(), $res->status());
         }
 
-        return $res->json();
+       return $resJson;
     }
 
     public static function saveAndFinalize(){
@@ -485,15 +491,16 @@ class OtelzReservation {
                 "web_hook_url" => self::$web_hook_url
         ]);
 
-        if(!empty($res["errors"])){
-            Otelz::error($res["errors"][0]["message"], $res["errors"][0]["code"]);
+        $resJson = $res->json();
+        if(!empty($resJson["errors"])){
+            return Otelz::error( $resJson["errors"][0]["message"], $resJson["errors"][0]["code"]);
         }
 
         if($res->status() != 200){
-            Otelz::error("Oh no!, status code: " . $res->status(), $res->status());
+            Otelz::errorThrow("Oh no!, status code: " . $res->status(), $res->status());
         }
 
-        return $res->json();
+       return $resJson;
     }
 
 }

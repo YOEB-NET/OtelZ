@@ -40,20 +40,20 @@ class Otelz {
             $data = new \stdClass;
         }
 
-        return response()->json([
+        return (object) [
             'status' => true,
             'message' => $message,
             'data' => $data
-        ], 200, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        ];
     }
 
     public static function error($message = "", $errorCode = "V000")
     {
-        return response()->json([
+        return (object) [
             'status'        => false,
             'message'       => $message,
             'error_code'    => $errorCode,
-        ]);
+        ];
     }
 
     public static function errorThrow($message = "", $errorCode = "V000")
