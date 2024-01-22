@@ -6,7 +6,6 @@ use Yoeb\Otelz\Const\OtelzCountry;
 use Yoeb\Otelz\Const\OtelzCurrency;
 use Yoeb\Otelz\Const\OtelzDevice;
 use Yoeb\Otelz\Const\OtelzLanguage;
-use Illuminate\Support\Facades\Http;
 
 class OtelzHotel {
     static protected $lang                  = OtelzLanguage::TR;
@@ -185,7 +184,7 @@ class OtelzHotel {
             Otelz::error("Oh no!, status code: " . $res->status(), $res->status());
         }
 
-       return $res->json();
+       return Otelz::data("Hotels listed.", $res->json());
     }
 
     static function data() {
@@ -206,7 +205,7 @@ class OtelzHotel {
             Otelz::errorThrow("Oh no!, status code: " . $res->status(), $res->status());
         }
 
-       return $resJson;
+       return Otelz::data("Hotels listed.", $resJson);
     }
 
 

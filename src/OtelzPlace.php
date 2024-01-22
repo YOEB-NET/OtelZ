@@ -4,7 +4,6 @@ namespace Yoeb\Otelz;
 
 use Yoeb\Otelz\Const\OtelzCountry;
 use Yoeb\Otelz\Const\OtelzLanguage;
-use Illuminate\Support\Facades\Http;
 
 class OtelzPlace {
 
@@ -22,7 +21,7 @@ class OtelzPlace {
             Otelz::errorThrow("Oh no!, status code: " . $res->status(), $res->status());
         }
 
-       return $resJson["cities"];
+       return Otelz::data("Cities listed.", $resJson["cities"]);
     }
 
     static function districts($city_reference, $lang = OtelzLanguage::TR) {
@@ -39,7 +38,7 @@ class OtelzPlace {
             Otelz::errorThrow("Oh no!, status code: " . $res->status(), $res->status());
         }
 
-       return $resJson["districts"];
+        return Otelz::data("Districts listed.", $resJson["districts"]);
     }
 
 }

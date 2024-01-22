@@ -5,9 +5,7 @@ namespace Yoeb\Otelz;
 use Yoeb\Otelz\Const\OtelzCountry;
 use Yoeb\Otelz\Const\OtelzCurrency;
 use Yoeb\Otelz\Const\OtelzDevice;
-use Yoeb\Otelz\Const\OtelzLanguage;
 use Yoeb\Otelz\Const\OtelzPayment;
-use Illuminate\Support\Facades\Http;
 
 class OtelzReservation {
     static protected $lang = "tr";
@@ -115,7 +113,7 @@ class OtelzReservation {
             Otelz::errorThrow("Oh no!, status code: " . $res->status(), $res->status());
         }
 
-       return $resJson;
+       return Otelz::data("", $resJson);
     }
 
     public static function facilityReferencesAdd($facilityReference){
@@ -188,7 +186,7 @@ class OtelzReservation {
             Otelz::errorThrow("Oh no!, status code: " . $res->status(), $res->status());
         }
 
-       return $resJson;
+       return Otelz::data("Reservation started.", $resJson["reservation"]);
     }
 
     public static function lang($lang){
@@ -361,7 +359,7 @@ class OtelzReservation {
             Otelz::errorThrow("Oh no!, status code: " . $res->status(), $res->status());
         }
 
-       return $resJson;
+       return Otelz::data("Customer saved.", $resJson["reservation"]);
     }
 
     public static function saveRoom(){
@@ -389,7 +387,7 @@ class OtelzReservation {
             Otelz::errorThrow("Oh no!, status code: " . $res->status(), $res->status());
         }
 
-       return $resJson;
+       return Otelz::data("Room saved.", $resJson["reservation"]);
     }
 
     public static function saveCustomerAndRoom(){
@@ -424,7 +422,7 @@ class OtelzReservation {
             Otelz::errorThrow("Oh no!, status code: " . $res->status(), $res->status());
         }
 
-       return $resJson;
+       return Otelz::data("Customer and room saved.", $resJson["reservation"]);
     }
 
     public static function status(){
@@ -442,7 +440,7 @@ class OtelzReservation {
             Otelz::errorThrow("Oh no!, status code: " . $res->status(), $res->status());
         }
 
-       return $resJson;
+       return Otelz::data("", $resJson);
     }
 
     public static function finalize(){
@@ -465,7 +463,7 @@ class OtelzReservation {
             Otelz::errorThrow("Oh no!, status code: " . $res->status(), $res->status());
         }
 
-       return $resJson;
+       return Otelz::data("Finalized", $resJson["reservation"]);
     }
 
     public static function saveAndFinalize(){
@@ -500,7 +498,7 @@ class OtelzReservation {
             Otelz::errorThrow("Oh no!, status code: " . $res->status(), $res->status());
         }
 
-       return $resJson;
+       return Otelz::data("", $resJson);
     }
 
 }

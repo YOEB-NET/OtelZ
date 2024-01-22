@@ -2,7 +2,6 @@
 
 namespace Yoeb\Otelz;
 
-use Illuminate\Support\Facades\Http;
 
 class OtelzInstallment {
 
@@ -17,7 +16,7 @@ class OtelzInstallment {
             Otelz::errorThrow("Oh no!, status code: " . $res->status(), $res->status());
         }
 
-       return $resJson["installments"]["12004"];
+       return Otelz::data("Installments listed" , $resJson["installments"]["12004"]);
     }
 
 }
