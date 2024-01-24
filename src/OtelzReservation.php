@@ -501,4 +501,23 @@ class OtelzReservation {
        return Otelz::data("", $resJson);
     }
 
+
+    public static function detail(){
+        $res = Otelz::post("/reservation/detail", [
+                "reservation_guid" => self::$reservation_guid,
+        ]);
+
+        $resJson = $res->json();
+        if(!empty($resJson["errors"])){
+            return Otelz::error( $resJson["errors"][0]["message"], $resJson["errors"][0]["code"]);
+        }
+
+        if($res->status() != 200){
+            Otelz::errorThrow("Oh no!, status code: " . $res->status(), $res->status());
+        }
+
+       return Otelz::data("Detail listed.", $resJson);
+    }
+
+
 }
