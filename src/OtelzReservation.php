@@ -106,7 +106,7 @@ class OtelzReservation {
 
         $resJson = $res->json();
         if(!empty($resJson["errors"])){
-            return Otelz::error( $resJson["errors"][0]["message"], $resJson["errors"][0]["code"]);
+            return Otelz::error( $resJson["errors"][0]["message"] ?? "Unknow.", $resJson["errors"][0]["code"] ?? "U000");
         }
 
         if($res->status() != 200){
@@ -179,7 +179,7 @@ class OtelzReservation {
 
         $resJson = $res->json();
         if(!empty($resJson["errors"])){
-            return Otelz::error( $resJson["errors"][0]["message"], $resJson["errors"][0]["code"]);
+            return Otelz::error( $resJson["errors"][0]["message"] ?? "Unknow.", $resJson["errors"][0]["code"] ?? "U000");
         }
 
         if($res->status() != 200){
@@ -352,7 +352,7 @@ class OtelzReservation {
 
         $resJson = $res->json();
         if(!empty($resJson["errors"])){
-            return Otelz::error( $resJson["errors"][0]["message"], $resJson["errors"][0]["code"]);
+            return Otelz::error( $resJson["errors"][0]["message"] ?? "Unknow.", $resJson["errors"][0]["code"] ?? "U000");
         }
 
         if($res->status() != 200){
@@ -380,7 +380,7 @@ class OtelzReservation {
 
         $resJson = $res->json();
         if(!empty($resJson["errors"])){
-            return Otelz::error( $resJson["errors"][0]["message"], $resJson["errors"][0]["code"]);
+            return Otelz::error( $resJson["errors"][0]["message"] ?? "Unknow.", $resJson["errors"][0]["code"] ?? "U000");
         }
 
         if($res->status() != 200){
@@ -415,7 +415,7 @@ class OtelzReservation {
 
         $resJson = $res->json();
         if(!empty($resJson["errors"])){
-            return Otelz::error( $resJson["errors"][0]["message"], $resJson["errors"][0]["code"]);
+            return Otelz::error( $resJson["errors"][0]["message"] ?? "Unknow.", $resJson["errors"][0]["code"] ?? "U000");
         }
 
         if($res->status() != 200){
@@ -433,7 +433,7 @@ class OtelzReservation {
 
         $resJson = $res->json();
         if(!empty($resJson["errors"])){
-            return Otelz::error( $resJson["errors"][0]["message"], $resJson["errors"][0]["code"]);
+            return Otelz::error( $resJson["errors"][0]["message"] ?? "Unknow.", $resJson["errors"][0]["code"] ?? "U000");
         }
 
         if($res->status() != 200){
@@ -456,7 +456,7 @@ class OtelzReservation {
 
         $resJson = $res->json();
         if(!empty($resJson["errors"])){
-            return Otelz::error( $resJson["errors"][0]["message"], $resJson["errors"][0]["code"]);
+            return Otelz::error( $resJson["errors"][0]["message"] ?? "Unknow.", $resJson["errors"][0]["code"] ?? "U000");
         }
 
         if($res->status() != 200){
@@ -491,7 +491,7 @@ class OtelzReservation {
 
         $resJson = $res->json();
         if(!empty($resJson["errors"])){
-            return Otelz::error( $resJson["errors"][0]["message"], $resJson["errors"][0]["code"]);
+            return Otelz::error( $resJson["errors"][0]["message"] ?? "Unknow.", $resJson["errors"][0]["code"] ?? "U000");
         }
 
         if($res->status() != 200){
@@ -509,7 +509,7 @@ class OtelzReservation {
 
         $resJson = $res->json();
         if(!empty($resJson["errors"])){
-            return Otelz::error( $resJson["errors"][0]["message"], $resJson["errors"][0]["code"]);
+            return Otelz::error( $resJson["errors"][0]["message"] ?? "Unknow.", $resJson["errors"][0]["code"] ?? "U000");
         }
 
         if($res->status() != 200){
@@ -519,5 +519,22 @@ class OtelzReservation {
        return Otelz::data("Detail listed.", $resJson);
     }
 
+
+    public static function cancel(){
+        $res = Otelz::post("/reservation/cancel", [
+                "reservation_guid" => self::$reservation_guid,
+        ]);
+
+        $resJson = $res->json();
+        if(!empty($resJson["errors"])){
+            return Otelz::error($resJson["errors"][0]["message"] ?? "Unknow.", $resJson["errors"][0]["code"] ?? "U000");
+        }
+
+        if($res->status() != 200){
+            Otelz::errorThrow("Oh no!, status code: " . $res->status(), $res->status());
+        }
+
+       return Otelz::data("Detail listed.", $resJson);
+    }
 
 }

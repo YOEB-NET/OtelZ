@@ -103,12 +103,12 @@ class OtelzHotel {
     }
 
     public static function adults($adults) {
-        self::$adults = $adults;
+        self::$party["adults"] = $adults;
         return new static;
     }
 
     public static function children($children) {
-        self::$children = $children;
+        self::$party["children"] = $children;
         return new static;
     }
 
@@ -167,10 +167,7 @@ class OtelzHotel {
             "price_formatter"   => [
                 "decimal_digit_number"  => self::$decimal_digit_number,
             ],
-            "party" => [
-                "adults"    => self::$adults,
-                "children"  => self::$children
-            ],
+            "party" => self::$party,
             "user_country"      => self::$user_country,
             "page_number"       => self::$page_number,
             "page_size"         => self::$page_size,
