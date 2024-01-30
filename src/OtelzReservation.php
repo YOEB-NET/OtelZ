@@ -89,19 +89,14 @@ class OtelzReservation {
             "api_version" => "1.0.0",
             "partner_id" => -200,
             "facility_reference" => 12004,
-            "start_date" => "2024-02-01",
-            "end_date" => "2024-02-03",
-            "party" => [
-                [
-                    "adults" => 2,
-                    "children" => []
-                ]
-            ],
-            "lang" => "tr",
-            "currency" => "try",
-            "user_country" => "tr",
-            "device_type" => 1,
-            "request_type" => "2"
+            "start_date" => self::$start_date,
+            "end_date" => self::$end_date,
+            "party" => self::$party,
+            "lang" => self::$lang,
+            "currency" => self::$currency,
+            "user_country" => self::$user_country,
+            "device_type" => self::$device_type,
+            "request_type" => self::$request_type,
         ]);
 
         $resJson = $res->json();
@@ -536,5 +531,6 @@ class OtelzReservation {
 
        return Otelz::data("Detail listed.", $resJson);
     }
+
 
 }
