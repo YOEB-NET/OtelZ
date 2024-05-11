@@ -1,7 +1,7 @@
 {
     "name": "yoeb/otelz",
     "description": "YOEB.NET",
-    "version": "v2.2.0",
+    "version": "v2.3.0",
     "license": "MIT",
     "autoload": {
         "psr-4": {
@@ -16,7 +16,7 @@
     ],
     "require": {
         "php": ">=7.2",
-        "laravel/framework": "^7.0"
+        "laravel/framework": ">=7.0"
     },
     "minimum-stability": "stable",
     "type": "library"
